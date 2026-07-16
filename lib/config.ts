@@ -62,7 +62,17 @@ export async function getSiteConfig(): Promise<SiteConfig> {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      {
+        global: {
+          // Next.js patches global fetch and caches it by default even
+          // when the page is force-dynamic - explicitly opt this request
+          // out so config changes show up immediately, not on some
+          // arbitrary cached schedule.
+          fetch: (url, options) =>
+            fetch(url, { ...options, cache: "no-store" }),
+        },
+      }
     );
     const { data, error } = await supabase
       .from("site_config")

@@ -5,6 +5,7 @@ import { getSiteConfig } from "@/lib/config";
 // Config is admin-editable at runtime via Supabase, so never cache this
 // page - always fetch the latest settings on each request.
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function Home() {
   const config = await getSiteConfig();
